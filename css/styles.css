@@ -5,6 +5,34 @@
   font-family: 'Raleway', serif !important;
 }
 
+.loginUsuario {
+  text-align: center;
+  position: relative;
+}
+
+.loginUsuario input {
+  border: 0.1rem solid black;
+  border-radius: 0.2rem;
+}
+
+.loginUsuario input:hover {
+  border: 0.1rem solid rgb(0, 183, 255);
+  box-shadow: 0 0 1rem 0 #3896c9;
+  border-radius: 0.2rem;
+  transition: 0.4s;
+}
+
+#warning {
+  position: absolute;
+}
+
+#nose {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+
 .jumbotron .display-4 {
   font-weight: bold;
 }
