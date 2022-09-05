@@ -22,6 +22,10 @@
   transition: 0.4s;
 }
 
+#less, #more {
+  width: 3.3rem;
+}
+
 #warning {
   position: absolute;
 }

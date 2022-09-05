@@ -7,35 +7,56 @@ const CART_INFO_URL = "https://japceibal.github.io/emercado-api/user_cart/";
 const CART_BUY_URL = "https://japceibal.github.io/emercado-api/cart/buy.json";
 const EXT_TYPE = ".json";
 
-let showSpinner = function(){
-  document.getElementById("spinner-wrapper").style.display = "block";
+let validar1 = document.getElementById('validarEmail');
+let validar2 = document.getElementById('validarPassword');
+let navnombre = document.getElementsByClassName('nombree')
+
+navnombre[0].innerHTML += `<p class='nombree m-2 text-light'>${localStorage.getItem('email')}</p>`
+
+function enviar() {
+
+    if (!(validar1.value == '') && !(validar2.value == '')) {
+        window.location.assign('main.html')
+    } else {
+        document.querySelector('#warning').innerHTML = 'Necesitas llenar los campos vacios'
+    }
+
+    if (validar1.value) {
+        localStorage.setItem('email', validar1.value)
+    } else {
+        localStorage.removeItem('email')
+    }
 }
 
-let hideSpinner = function(){
-  document.getElementById("spinner-wrapper").style.display = "none";
+let showSpinner = function () {
+    document.getElementById("spinner-wrapper").style.display = "block";
 }
 
-let getJSONData = function(url){
+let hideSpinner = function () {
+    document.getElementById("spinner-wrapper").style.display = "none";
+}
+
+let getJSONData = function (url) {
     let result = {};
     showSpinner();
     return fetch(url)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }else{
-        throw Error(response.statusText);
-      }
-    })
-    .then(function(response) {
-          result.status = 'ok';
-          result.data = response;
-          hideSpinner();
-          return result;
-    })
-    .catch(function(error) {
-        result.status = 'error';
-        result.data = error;
-        hideSpinner();
-        return result;
-    });
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw Error(response.statusText);
+            }
+        })
+        .then(function (response) {
+            result.status = 'ok';
+            result.data = response;
+            hideSpinner();
+            return result;
+        })
+        .catch(function (error) {
+            result.status = 'error';
+            result.data = error;
+            hideSpinner();
+            return result;
+        });
 }
