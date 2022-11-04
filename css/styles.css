@@ -22,6 +22,16 @@
   transition: 0.4s;
 }
 
+#cajacomentario {
+  margin-left: 6rem;
+
+}
+
+#textocomentario {
+  width: 30rem;
+  height: 3rem;
+}
+
 #less, #more {
   width: 3.3rem;
 }

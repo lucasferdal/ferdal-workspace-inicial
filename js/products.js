@@ -1,13 +1,13 @@
-let min = document.getElementById('rangeFilterCountMin')
-let max = document.getElementById('rangeFilterCountMax')
-let displayDiv = document.getElementById('displayDiv')
-let lessToMore = document.getElementById('less')
-let moreToLess = document.getElementById('more')
-let relevance = document.getElementById('relevance')
-let categoryName = document.getElementById('categoryName')
+const min = document.getElementById('rangeFilterCountMin')
+const max = document.getElementById('rangeFilterCountMax')
+const displayDiv = document.getElementById('displayDiv')
+const lessToMore = document.getElementById('less')
+const moreToLess = document.getElementById('more')
+const relevance = document.getElementById('relevance')
+const categoryName = document.getElementById('categoryName')
 
 function myGreatCode(theValue) {
-    let setHowMuch = undefined
+    let setHowMuch = []
 
     let getFilter = theValue.filter((refilter) => {
         return refilter.cost >= min.value && refilter.cost <= max.value
@@ -16,7 +16,7 @@ function myGreatCode(theValue) {
     let displayScreen = () => {
         for (let i = 0; i < setHowMuch.length; i++) {
             displayDiv.innerHTML += `
-            <div class='list-group-item list-group-item-action'> 
+            <div class='list-group-item list-group-item-action' onclick='getId(${theValue[i].id})'> 
             <div class='row'> 
             <div class='col-3'> 
             <img src="${theValue[i].image}" class='img-thumbnail'/> 
@@ -39,7 +39,7 @@ function myGreatCode(theValue) {
     if (getFilter.length === 0) {
         setHowMuch = theValue
         displayScreen()
-
+        
     } else if (min.value.length !== 0) {
         setHowMuch = theValue
         theValue = getFilter
@@ -64,6 +64,11 @@ function myGreatCode(theValue) {
     })
 }
 
+function getId(Value) {
+    localStorage.setItem('numeroId', Value)
+    window.location = 'product-info.html'
+}
+
 function setOrganize() {
     displayDiv.innerHTML = ''
     myGreatCode(data.products)
@@ -77,7 +82,7 @@ async function getFetch() {
     } catch (error) {
         console.log(error)
     }
-
+    
     if (data) {
         categoryName.innerHTML += `<p> Veras aqui todos los productos de la categoria <strong>${data.catName}</strong></p>`
         myGreatCode(data.products)

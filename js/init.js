@@ -9,9 +9,24 @@ const EXT_TYPE = ".json";
 
 let validar1 = document.getElementById('validarEmail');
 let validar2 = document.getElementById('validarPassword');
-let navnombre = document.getElementsByClassName('nombree')
+let navnombre = document.getElementsByClassName('nombre')
 
-navnombre[0].innerHTML += `<p class='nombree m-2 text-light'>${localStorage.getItem('email')}</p>`
+navnombre[0].innerHTML += `
+
+<ul class="navbar-nav">
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" name="dropdown">
+  ${localStorage.getItem('email')}
+  </a>
+  <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+    <li><a class="dropdown-item" href="cart.html">Mi carrito</a></li>
+    <li><a class="dropdown-item" href="my-profile.html">Mi perfil</a></li>
+    <li><a class="dropdown-item" href="index.html">Cerrar sesión </a></li>
+  </ul>
+</li>
+</ul>
+
+`
 
 function enviar() {
 
