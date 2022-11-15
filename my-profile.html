@@ -18,6 +18,14 @@
       user-select: none;
     }
 
+    label {
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    h2 {
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
     @media (min-width: 768px) {
       .bd-placeholder-img-lg {
         font-size: 3.5rem;
@@ -36,7 +44,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav w-100 justify-content-between">
           <li class="nav-item">
-            <a class="nav-link" href="index.html">Inicio</a>
+            <a class="nav-link" href="main.html">Inicio</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="categories.html">Categorías</a>
@@ -51,10 +59,45 @@
     </div>
   </nav>
   <main>
-    <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
+    <div class="container mt-3">
+      <div>
+        <div class='mt-3 ms-4'>
+          <h2>Perfil del usuario</h2>
+        </div>
+        <div id="divFotoPerfil">
+          <img src="./img/perfil_anonimo.png" id="imagenPerfil">
+          <input type="file" id="cambiarPerfil">
+          <label for="cambiarPerfil" id="cambiarImagen">Elegir imagen</label>
+        </div>
       </div>
+      <hr id="primerHr">
+
+      <div class="container mt-5 d-flex justify-content-center">
+        <div class="p-3">
+          <label class='form-label' for="primerNombre">Primer nombre</label>
+          <input class='form-control' style='width: 20rem;' type="text" id="primerNombre">
+          <label class='form-label mt-4' for="segundoNombre">Segundo nombre</label>
+          <input class='form-control' style='width: 20rem;' type="text" id="segundoNombre">
+        </div>
+        <div class="p-3">
+          <label class='form-label' for="primerApellido">Primer apellido</label>
+          <input class='form-control' style='width: 20rem;' type="text" id="primerApellido">
+          <label class='form-label mt-4' for="segundoApellido">Segundo apellido</label>
+          <input class='form-control' style='width: 20rem;' type="text" id="segundoApellido">
+        </div>
+        <div class="p-3">
+          <label class='form-label' for="email">E-mail</label>
+          <input class='form-control' style='width: 20rem;' type="text" id="email">
+          <label class='form-label mt-4' for="numero">Numero de telefono</label>
+          <input class='form-control' style='width: 20rem;' type="text" id="numero">
+        </div>
+      </div>
+
+      <div class="mt-5">
+        <hr>
+        <button class="btn btn-success" id='boton' onclick="guardarLocal()">Guardar cambios</button>
+      </div>
+
     </div>
   </main>
   <footer class="text-muted">

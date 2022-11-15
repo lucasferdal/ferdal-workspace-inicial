@@ -1,58 +1,62 @@
-const cart = document.getElementById('cart')
-const productCost = document.querySelector('#productCostText')
-const percentage = document.querySelector('#comissionText')
-const totalCostProduct = document.querySelector('#totalCostText')
-let localValue = JSON.parse(localStorage.getItem('cantidad'))
-let checkboxValue = undefined
-let productsValue = []
+const cart              = document.getElementById('cart')
+const productCost       = document.querySelector('#productCostText')
+const percentage        = document.querySelector('#comissionText')
+const totalCostProduct  = document.querySelector('#totalCostText')
+let localValue          = JSON.parse(localStorage.getItem('cantidad'))
+let checkboxValue       = undefined
+let productsValue       = []
 
 function getFetch(info) {
     //Codigo para mostrar en pantalla el producto precargado, trayendolo desde el link que se nos proporciono en la Entrega 5
-    const { name, count, unitCost, currency, image } = info.articles[0]
+    const { name, count, unitCost, currency, image, id } = info.articles[0]
     cart.innerHTML += `
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Imagen</th>
+                <th scope="col"></th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Costo</th>
                 <th scope="col">Cantidad</th>
                 <th scope="col">Subtotal</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody id='ingresar'>
-            <tr>
+            <tr class='productoSection'>
                 <td><img src='${image}' style='height: 2rem' /></td>
                 <td><p>${name}</p></td>
                 <td><p>${currency} ${unitCost}</p></td>
                 <td><input class='text-center' type='number' style='width: 5rem' oninput='firstProduct(value, ${unitCost})' value='${count}' id='peuValue' min='1' e.preventDefault()/></td>
                 <td id='totalCost'><p>${currency} ${unitCost}</p></td>
+                <td><button class="fa fa-trash" value='${id}' onclick='borrarArticulo(value)'></button></td>
             </tr>
         </tbody>
     </table>
     `
     //Se envia el producto a productsValue en el puesto 0, para que el array se mantenga mas ordenado (debido a que este producto siempre se mostrara arriba del todo)
-    productsValue.unshift({ id: 0, currency, total: unitCost })
+    productsValue.unshift({ id: 0, newId: id, currency, total: unitCost })
     console.log(localValue)
     //Bucle for que recorre todos los elementos almacenados en el Localstorage y los muestra en pantalla
     for (let i = 0; i < localValue.length; i++) {
         let element = localValue[i];
-        let { name, cost, images, currency } = element
+        let { name, cost, images, currency, id} = element
 
         document.querySelector('#ingresar').innerHTML += `
-        <tr>
+        <tr class='productoSection'>
             <td><img src='${images[0]}' style='height: 2rem' /></td>
             <td><p>${name}</p></td>
             <td><p>${currency} ${cost}</p></td>
             <td><input class='text-center granArray' type='number' style='width: 5rem' value='1' id='units' min='1' oninput='setArray(${i}, ${cost})'/></td>
             <td class='totalCostArray'><p>${currency} ${cost}</p></td>
+            <td><button class="fa fa-trash" value='${id}' onclick='borrarArticulo(value)'></button></td>
         </tr>
         `
 
         //Nuevamente, se guarda cada elemento en productsValue(su id, moneda y precio), igualando su id con 'i'
-        id = i
+        newId = id
+        id = i + 1
         total = cost
-        productsValue.push({ id, currency, total })
+        productsValue.push({ id, newId, currency, total })
     }
     setProductValue()
 }
@@ -71,10 +75,23 @@ document.querySelector('#radioThree').addEventListener('change', () => {
     setProductValue()
 })
 
+//Funcion para eliminar el articulo seleccionado
+const borrarArticulo = (productId) => {
+    let borrar = document.getElementsByClassName('fa-trash')
+
+    let encontrarLocal = localValue.splice(localValue.indexOf(localValue.find(e => e.id == productId)), 1)
+    localStorage.setItem('cantidad', JSON.stringify(localValue))
+
+    let encontrarProducts = productsValue.find(e => e.newId == productId)
+    location.reload()
+    console.log(encontrarProducts)
+
+}
+
 function firstProduct(count, unitCost) {
     //Codigo para calcular el precio del elemento precargado del carrito (entrega 5) multiplicando su precio por el unitCost
     const totalCost = document.querySelector('#totalCost')
-    const peuValue = document.querySelector('#peuValue')
+    const peuValue  = document.querySelector('#peuValue')
     let max = count * unitCost
 
     //Condicional para que el usuario no pueda disminuir a 0 o menos la cantidad del producto a comprar
@@ -92,20 +109,24 @@ function firstProduct(count, unitCost) {
 
 const setArray = (id, cost) => {
     //Al igual que mas arriba, con las siguientes lineas se calcula el precio unitario de cada producto multiplicado por la cantidad del producto (de todos los productos excepto el precargado en el carrito)
-    id--
     let granArray = document.getElementsByClassName('granArray')[id]
     let totalCostArray = document.getElementsByClassName('totalCostArray')[id]
+    id++
 
     if (granArray.value <= 0) {
         granArray.value = 1
     }
 
-    id++
+    id--
     let currency = JSON.parse(localStorage.getItem('cantidad'))[id].currency
+    console.log(currency)
+
     let total = granArray.value * cost
+
     totalCostArray.innerHTML = `
     <p>${currency} ${total}</p>
     `
+
     filterProductValue(id, total)
     console.log(productsValue)
 }
@@ -124,6 +145,7 @@ function filterProductValue(id, total) {
 }
 
 function setProductValue() {
+
     let productMap = productsValue.map(e => {
         if (e.currency === 'UYU') {
             return Math.round(e.total / 40)
@@ -136,24 +158,24 @@ function setProductValue() {
         return a = a + b
     })
 
-    let division = Math.round(reduceTotal * (checkboxValue / 100))
+    let division        = Math.round(reduceTotal * (checkboxValue / 100))
     let percentageTotal = 'USD ' + division
-    let totalValue = 'USD ' + reduceTotal
+    let totalValue      = 'USD ' + reduceTotal
 
     !division ? percentageTotal = 'USD ' + Math.round(reduceTotal * (5 / 100)) : totalValue = 'USD ' + (division + reduceTotal)
 
-    productCost.innerHTML = 'USD ' + reduceTotal
-    percentage.innerHTML = percentageTotal
-    totalCostProduct.innerHTML = totalValue
+    productCost.innerHTML       = 'USD ' + reduceTotal
+    percentage.innerHTML        = percentageTotal
+    totalCostProduct.innerHTML  = totalValue
 }
 
-const numero = document.querySelector('#numero')
-const calle = document.querySelector('#calle')
-const esquina = document.querySelector('#esquina')
+const numero        = document.querySelector('#numero')
+const calle         = document.querySelector('#calle')
+const esquina       = document.querySelector('#esquina')
 const classRadioUno = document.querySelectorAll('.classRadioUno')
 const classRadioDos = document.querySelector('.classRadioDos')
-const radioUno = document.querySelector('#radioUno')
-const radioDos = document.querySelector('#radioDos')
+const radioUno      = document.querySelector('#radioUno')
+const radioDos      = document.querySelector('#radioDos')
 
 //Funcion para validar input
 function valid(e) {
@@ -167,9 +189,9 @@ function invalid(e) {
 }
 
 function validGran() {
-    numero.value === '' ? invalid(numero) : valid(numero)
-    calle.value === '' ? invalid(calle) : valid(calle)
-    esquina.value === '' ? invalid(esquina) : valid(esquina)
+    numero.value    === '' ? invalid(numero) : valid(numero)
+    calle.value     === '' ? invalid(calle) : valid(calle)
+    esquina.value   === '' ? invalid(esquina) : valid(esquina)
 }
 
 function checkDisabled() {
@@ -194,17 +216,18 @@ function checkDisabled() {
 (() => {
     'use strict'
 
-    let forms = document.querySelectorAll('.needs-validate')
-    let modalState = document.querySelector('.modalState')
+    let forms       = document.querySelectorAll('.needs-validate')
+    let modalState  = document.querySelector('.modalState')
 
     Array.prototype.slice.call(forms)
         .forEach(form => {
             form.addEventListener('submit', event => {
+
                 if (!form.checkValidity()) {
                     form.addEventListener('input', validGran)
                     event.stopPropagation()
                     modalState.innerHTML = `
-                    <p style='color: red'>Debes llenar los campos vacios!</p>
+                    <p>Debes llenar los campos vacios!</p>
                     `
                 } else {
                     modalState.innerHTML = ''
@@ -214,6 +237,7 @@ function checkDisabled() {
 
                 form.classList.add('was-validated')
                 event.preventDefault()
+
             }, false)
         })
 })()

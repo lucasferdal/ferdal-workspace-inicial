@@ -49,16 +49,21 @@
 
             <div class="container pt-5 ms-3" id="cajacomentario">
                 <h4>Dejanos un mensaje!</h4>
-                <input type="text" id="textocomentario">
+                <textarea id="textocomentario" placeholder="Escribe un mensaje"></textarea>
                 <br>
-                <button type="button" class="btn btn-outline-dark mt-2" id="botontexto"
-                    onclick="enviarMensaje()">Enviar</button>
-                <label class="ps-5" for="stars">Estrellas</label>
-
-                <!-- Funcion para mostrar el input con estrellas -->
-                <input id='stars' type="range" max="5" step="0.5" value="0"
-                    onchange="document.getElementById('output').value = value">
-                <output for="stars" id="output">0</output>
+                <div class="d-flex" id="buttonandstars">
+                    <button type="button" class="mt-2" id="botontexto"
+                        onclick="enviarMensaje()">Enviar</button>
+                    
+                        <div id="stars" class="d-flex ps-5">
+                            <button class="fa fa-star checked stars"></button>
+                            <button class="fa fa-star stars"></button>
+                            <button class="fa fa-star stars"></button>
+                            <button class="fa fa-star stars"></button>
+                            <button class="fa fa-star stars"></button>
+                        </div>
+                    
+                </div>
             </div>
         </div>
 
@@ -92,4 +97,5 @@
     <script src="js/init.js"></script>
     <script src="js/product-info.js"></script>
 </body>
+
 </html>

@@ -27,12 +27,10 @@ function getProductsInfo(valor) {
             <hr>
             <div class='d-flex flex-row bd-highlight'>
               <div class='mt-3 ms-3' style='width: 50%' >
-                <p> <strong>Id:</strong> ${id}</p>
-                <p> <strong>Nombre:</strong> ${name}</p>
-                <p> <strong>Descripcion:</strong> ${description}</p>
-                <p> <strong>Precio:</strong> ${currency} ${cost}</p>
-                <p> <strong>Vendidos:</strong> ${soldCount}</p>
-                <p> <strong>Categoria:</strong> ${category}</p>
+              <p style='font-size: 2rem;'> <strong>${currency} ${cost}</strong> </p>
+              <p> <strong>Vendidos:</strong> ${soldCount}</p>
+              <p> <strong>Categoria:</strong> ${category}</p>
+              <p> <strong>Descripcion:</strong> ${description}</p>
               </div>
               <div id="carouselExampleIndicators" class="carousel slide w-50" data-bs-ride="carousel">
                 <div class="carousel-indicators">
@@ -41,19 +39,7 @@ function getProductsInfo(valor) {
                   <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
                   <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
                 </div>
-                <div class="carousel-inner">
-                  <div class="carousel-item active">
-                    <img class='img-fluid border border-dark rounded' src="${images[0]}" class="d-block w-100" >
-                  </div>
-                  <div class="carousel-item">
-                    <img class='img-fluid border border-dark rounded' src="${images[1]}" class="d-block w-100" >
-                  </div>
-                  <div class="carousel-item">
-                    <img class='img-fluid border border-dark rounded' src="${images[2]}" class="d-block w-100" >
-                  </div>
-                  <div class="carousel-item">
-                    <img class='img-fluid border border-dark rounded' src="${images[3]}" class="d-block w-100" >
-                  </div>
+                <div class="carousel-inner" style='border-radius: 20% 20% 5% 5%; border: solid 1px black; box-shadow: 1rem 1rem black;'>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -70,31 +56,34 @@ function getProductsInfo(valor) {
       </div>
     </div>
     `
+  //Codigo para mostrar las imagenes en el carousel
+  for (let i of images) {
+    document.querySelector('.carousel-inner').innerHTML += `
+      <div class="divcar carousel-item" >
+        <img class='img-fluid' src="${i}" class="d-block w-100" >
+      </div>`
+    for (let x in images) {
+      if (x === '0') document.querySelector('.divcar').classList.add('active')
+    }
+  }
 
   //Las siguientes lineas tienen la funcion de guardar en el localstorage el producto al darle 'comprar', de esta manera se envia al carrito
   document.querySelector('#comprar').addEventListener('click', () => {
-    // let data = JSON.parse(localStorage.getItem('data'))
     let array = []
     let localValueTotal = JSON.parse(localStorage.getItem('cantidad'))
-    
-    if (localValueTotal === null) {
-      localStorage.setItem('cantidad', JSON.stringify(array))
-    }
 
-    let numero = valor
-    let local = JSON.parse(localStorage.getItem('cantidad'))
-    array = local
+    !localValueTotal ? localStorage.setItem('cantidad', JSON.stringify(array)) : array = JSON.parse(localStorage.getItem('cantidad'))
 
-    let mapArray = array.map((array) => {
+    let mapArray = array.map(array => {
       return array.id
     })
-
-    if (!mapArray.includes(numero.id)) {
-      array.push(numero)
+    if (!mapArray.includes(id) && !(id === 50924)) {
+      array.push(valor)
     }
 
-    localStorage.setItem('cantidad', JSON.stringify(local))
+    localStorage.setItem('cantidad', JSON.stringify(array))
 
+    //Codigo para desplegar el cartel de confirmacion en la esquina inferior derecha
     const toast = () => {
       let option = {
         animation: true,
@@ -106,6 +95,16 @@ function getProductsInfo(valor) {
     }
     toast()
   })
+}
+
+const insertarEstrellas = (score, i, whereSetStars) => {
+  for (let x = 0; x < score; x++) {
+    whereSetStars[i].innerHTML += '<span class="fa fa-star checked"></span>'
+  }
+
+  for (let z = 5 - score; z > 0; z--) {
+    whereSetStars[i].innerHTML += '<span class="fa fa-star"></span>'
+  }
 }
 
 //Funcion para mostrar los comentarios
@@ -123,46 +122,60 @@ function comments(data) {
                 <div class='setStars'>
                 </div>
               </div>
-              <div>
+              <div class='textoUsuarios'>
                 ${description}
               </div>
             </div>
           </div>
         </div>
         `
-
-        const setStars = document.querySelectorAll('.setStars')
-        
-        for (let x = 0; x < score; x++) {
-          setStars[i].innerHTML += '<span class="fa fa-star checked"></span>'
-        }
-    
-        for (let z = 5 - score; z > 0; z--) {
-          setStars[i].innerHTML += '<span class="fa fa-star"></span>'
-        }
-
+    const setStars = document.querySelectorAll('.setStars')
+    insertarEstrellas(score, i, setStars)
   }
 }
 
 //Funcion para insertar un nuevo comentario
+let estrellasComentario = 1;
 const enviarMensaje = () => {
   let hora = new Date()
 
-  comentario.innerHTML += `
+  if (ingresarTexto.value) {
+    comentario.innerHTML += `
         <div class='w-75'>
           <div class='container shadow rounded p-2 m-2 bg-light border' >
             <div class='container'>
-              <div>
-                <strong>${localStorage.getItem('email')}</strong> - ${hora.toLocaleDateString()} a las ${hora.toLocaleTimeString()} - <strong>Estrellas: </strong>
+              <div class='d-flex'>
+                <strong>${localStorage.getItem('email')}</strong> - ${hora.toLocaleDateString()} ${hora.toLocaleTimeString()} - 
+                <div class='setStarsClass'>
+                </div>
               </div>
-              <div>
+              <div class='textoUsuarios'>
                 ${ingresarTexto.value}
               </div>
             </div>
           </div>
         </div>
         `
+    ingresarTexto.value = ''
+    const setStarsClass = document.querySelectorAll('.setStarsClass')
+    insertarEstrellas(estrellasComentario, setStarsClass.length - 1, setStarsClass)
+  }
 }
+
+//Funcion para las estrellas que seleccionara el usuario
+const estrellaComentario = () => {
+  let stars = document.querySelectorAll('.stars')
+
+  stars.forEach((star, i) => {
+    star.onclick = () => {
+      estrellasComentario = i + 1
+      stars.forEach((star, x) => {
+        i >= x ? star.classList.add('checked') : star.classList.remove('checked')
+      })
+    }
+  })
+}
+estrellaComentario()
 
 //Funcion que toma el id del producto seleccionado (en la seccion productos relacionados) para luego recargar la pagina
 const cambiarLink = (link) => {
@@ -212,3 +225,4 @@ async function fetchComments() {
 }
 fetchComments()
 //180 lineas
+//232 lineas
